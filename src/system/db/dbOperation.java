@@ -13,7 +13,13 @@ public final class dbOperation {
 	public static Connection conn = null;
 	public static Statement stat = null;
 	
-	
+	/*
+	 * 数据库相关语句
+	 */
+	//insert
+	public static String insert = "insert into student values('%s','%s','%s','%s',%s,%s,%s,%s)";
+	//
+	public static String delete = "delete from student where id = '%s'"; 
 	public static void createTable()
 	{
 		String newTable = "create table Student("+

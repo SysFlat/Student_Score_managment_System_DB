@@ -15,9 +15,9 @@ public class Menu {
 		
 		dbOperation.dbConnection();
 		//dbOperation.createTable();
-		FileOperation.readFileIntoDb();
-		dbOperation.closeDb();
-		//mainMenu();
+		//FileOperation.readFileIntoDb();
+		//dbOperation.closeDb();
+		mainMenu();
 	}
 	
 	public static void mainMenu(){

@@ -1,7 +1,9 @@
 package system.operation;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
+import system.db.dbOperation;
 import system.file.FileOperation;
 import system.object.Student;
 
@@ -9,14 +11,15 @@ public final class AddDelModify {
 	
 	public static void addStudent()
 	{
-		String id;
-		String name;
-		String sex;
-		String academy;
-		String score1;
-		String score2;
-		String score3;
-		String quiet;
+		 String id;
+		 String name;
+		 String sex;
+		 String academy;
+		 String score1;
+		 String score2;
+		 String score3;
+		 String averageScore;
+		 String quit;
 		Scanner add = new Scanner(System.in);
 		while(true)
 		{
@@ -31,31 +34,39 @@ public final class AddDelModify {
 			academy = add.nextLine();
 			System.out.println("请输入科目一分数:\n\n");
 			score1 = add.nextLine();
-			System.out.println("请输入科目一分数:\n\n");
+			System.out.println("请输入科目二分数:\n\n");
 			score2 = add.nextLine();
-			System.out.println("请输入科目一分数:\n\n");
+			System.out.println("请输入科目三分数:\n\n");
 			score3 = add.nextLine();
 			
-			FileOperation.studentArray.add(new Student(
-					id,
-					name,
-					sex,
-					academy,
-					Float.parseFloat(score1),
-					Float.parseFloat(score2),
-					Float.parseFloat(score3)					
-					));
-			FileOperation.isModify = true;
+			averageScore = String.format("%.2f",(Float.parseFloat(score1) + Float.parseFloat(score2) + Float.parseFloat(score3)) / 3.0) ;
+			
+			try {
+				dbOperation.getStatement().executeUpdate(
+						String.format(dbOperation.insert, id,name,sex,academy,
+						 							score1,score2,score3,
+						 							//averageScore
+						 							averageScore)
+						);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 			
 			System.out.println("退出？（Y/N）");
-			quiet = add.nextLine();
-			if(quiet.equals("y") || quiet.equals("Y")) break;
+			quit = add.nextLine();
+			if(quit.equals("y") || quit.equals("Y")) 
+				{
+					System.out.println("退出当前页面.........\n\n\n");
+					break;
+				}
 		};		
 	}
 	
 	public static void delStudent()
 	{
 		String id;
+		String quit;
 		String match = "[0-9]+";
 		Scanner input = new Scanner(System.in);
 		System.out.println("删除学生： \n\n\n");
@@ -70,25 +81,19 @@ public final class AddDelModify {
 				else System.out.println("输入格式错误，请重新输入！");
 			};
 			
-			for(int i = 0; i < FileOperation.getStudentNum(); i++)
-			{
-				if(id.equals(FileOperation.getStudent(i).getId()))
-				{
-					FileOperation.studentArray.remove(i);
-					FileOperation.isModify = true;
-				}
+			try {
+				dbOperation.getStatement().executeUpdate(String.format(dbOperation.delete,id));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			if (!FileOperation.isModify)
-				System.out.println("没有相关信息！");
 			System.out.println("退出？（Y/N）");
 			
-			id = input.nextLine();
+			quit = input.nextLine();
 			
-			if(id.equals("Y") || id.equals("y")) 
+			if(quit.equals("Y") || quit.equals("y")) 
 			{
 				System.out.println("退出删除页面.........\n\n\n");
-				//input.close();
 				break;
 			}
 		};
