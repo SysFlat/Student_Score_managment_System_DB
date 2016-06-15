@@ -14,7 +14,8 @@ public class Menu {
 	public static void main(String[] args) {
 		
 		dbOperation.dbConnection();
-		dbOperation.createTable();
+		//dbOperation.createTable();
+		FileOperation.readFileIntoDb();
 		dbOperation.closeDb();
 		//mainMenu();
 	}
@@ -41,7 +42,7 @@ public class Menu {
 			System.out.println("****************************************");
 			System.out.println("输入序号选择相应的功能：");
 			
-			FileOperation.readFile();
+			//FileOperation.readFile();
 			int choice = input.nextInt();
 			//Integer.parseInt(s)
 			switch(choice)
@@ -85,7 +86,7 @@ public class Menu {
 			/*
 			 * 如何有修改，在退出时就写入修改
 			 */
-			if(FileOperation.getModifyFlag()) FileOperation.saveStudentInfo();
+	//		if(FileOperation.getModifyFlag()) FileOperation.saveStudentInfo();
 		}
 
 	}

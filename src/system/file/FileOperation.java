@@ -5,46 +5,47 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 
+import system.db.dbOperation;
 import system.object.Student;
 
 public class FileOperation {
-	public static ArrayList<Student> studentArray = new ArrayList<Student>();
-	public static boolean isModify = false;
+	public static String insertString = "insert into student values('%s','%s','%s','%s',%s,%s,%s,%s)";
 	/*
 	 * 读取数据文件
 	 */
-	public static void readFile( )
+	public static void readFileIntoDb( )
 	{
 		String dataLineString;
+		StringBuffer buff = new StringBuffer();
 		/*
-		 * 总共有7行
+		 * 总共有7列
 		 */
-		String arr[] = null;
-		studentArray.clear();
+		String array[] = null;
+		String averageScore ;
+
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("data.txt"));
 		
 			while((dataLineString = reader.readLine()) != null)
 			{
-				//System.out.println(dataLineString);
-				arr = dataLineString.split("\\s+");
-				
-				/*
-				 * 初始化对象
-				 */
-
-				studentArray.add(new Student(
-						arr[0],
-						arr[1],
-						arr[2],
-						arr[3],
-						Float.parseFloat(arr[4]),
-						Float.parseFloat(arr[5]),
-						Float.parseFloat(arr[6])
-						));	
+				array = dataLineString.split("\\s+");
+				averageScore = String.format("%.2f", (Float.parseFloat(array[4]) +
+													  Float.parseFloat(array[5]) + 
+													  Float.parseFloat(array[6]))/3.0);
+				try {
+					dbOperation.getStatement().executeUpdate(
+							String.format(insertString, array[0],array[1],array[2],array[3],
+							 							array[4],array[5],array[6],
+							 							//averageScore
+							 							averageScore)
+							);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 			reader.close();
@@ -53,37 +54,5 @@ public class FileOperation {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	public static void saveStudentInfo()
-	{
-		isModify = false;
-		try {
-			FileWriter writer = new FileWriter(new File("data.txt"));
-			for(int i = 0; i < getStudentNum(); i++)
-			{
-				writer.write(studentArray.get(i).writeOneStudentInfo());
-			}
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static int getStudentNum()
-	{
-		return studentArray.size();
-	}
-	
-	public static Student getStudent(int index)
-	{
-		return studentArray.get(index);
-	}
-	
-	public static boolean getModifyFlag()
-	{
-		return isModify;
-				
 	}
 }
