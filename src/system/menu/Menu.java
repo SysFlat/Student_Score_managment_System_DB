@@ -47,31 +47,32 @@ public class Menu {
 			//Integer.parseInt(s)
 			switch(choice)
 			{
-				case 1: AddDelModify.addStudent();
+			
+				case 1: new AddDelModify().addStudent();
 				break;
 				
-				case 2: AddDelModify.delStudent();
+				case 2: new AddDelModify().delStudent();
 				break;
 				
-				case 3: AddDelModify.modifyStudent();
+				case 3: new AddDelModify().modifyStudent();
 				break;
 			
-				case 4: SortFunction.descendByAverage();	
+				case 4: new SortFunction().descendByAverage();	
 				break;
 				
-				case 5: SortFunction.ascendByName();	
+				case 5: new SortFunction().ascendByName();	
 				break;
 				
-				case 6: QueryFunction.queryById();
+				case 6: new QueryFunction().queryById();
 				break;
 				
-				case 7: QueryFunction.queryByName();
+				case 7: new QueryFunction().queryByName();
 				break;
 				
-				case 8: QueryFunction.queryByAcademy();
+				case 8: new QueryFunction().queryByAcademy();
 				break;
 				
-				case 9: Statistic.statisticScore();
+				case 9: new Statistic().statisticScore();
 				break;
 				
 				case 10: 

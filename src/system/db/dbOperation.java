@@ -1,5 +1,6 @@
 package system.db;
 
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,14 +13,9 @@ public final class dbOperation {
 	public final static String jdbcDriver = "com.mysql.jdbc.Driver";
 	public static Connection conn = null;
 	public static Statement stat = null;
+	public static ResultSet set = null;
 	
-	/*
-	 * 数据库相关语句
-	 */
-	//insert
-	public static String insert = "insert into student values('%s','%s','%s','%s',%s,%s,%s,%s)";
-	//
-	public static String delete = "delete from student where id = '%s'"; 
+
 	public static void createTable()
 	{
 		String newTable = "create table Student("+
@@ -61,6 +57,11 @@ public final class dbOperation {
 	public static void closeDb()
 	{
 		try {
+			set.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
 			stat.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,5 +77,72 @@ public final class dbOperation {
 	{
 		return stat;
 	}
-
+	
+	public static Connection dbConn()
+	{
+		Connection connection = null;
+		
+		try {
+			Class.forName(jdbcDriver);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			connection = DriverManager.getConnection(link,user,password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return connection;
+	}
+	public static void dbClose(Connection conn,ResultSet set, Statement stat)
+	{
+		try
+		{
+			if(stat != null)
+			{
+					stat.close();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		try
+		{
+			if(set != null)
+			{
+				set.close();
+			}
+		}catch (SQLException e2 )
+		{
+			e2.printStackTrace();
+		}
+		
+		try 
+		{
+			if(conn != null)
+			{
+					conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static int getQueryCount(Statement stat,String sql,ResultSet set)
+	{
+		int num = 0;
+		try {
+			set = stat.executeQuery(sql);
+			if(set.next())
+			{
+				num = set.getInt("count(*)");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
+	}
 }
